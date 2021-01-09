@@ -49,7 +49,7 @@ uniform float cameraY;
 
 void main() {
     float colAmount = fragmentColor + 0.13 * zPos;
-    float alpha = colAmount - 0.008 * (yPos - cameraY);
+    float alpha = colAmount * pow( 1.0 - 0.0084 * (yPos - cameraY), 2.0);
 	gl_FragColor = vec4(colAmount * rAmt, colAmount * gAmt, colAmount * bAmt, alpha);
 }
 `;
