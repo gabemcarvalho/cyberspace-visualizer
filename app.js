@@ -1,14 +1,28 @@
 "use strict";
 
-let noiseSize = 24;
-let chunks = 8;
-let wavelength = 8;
-let octaves = 3;
-let yScrollSpeed = 18;
+const noiseSize = 24;
+const chunks = 8;
+const wavelength = 8;
+const octaves = 3;
+let FoV = 100;
+let height = 2;
+let yScrollSpeed = 4; // 18
 let shaderBrightness = 0.2;
+let fogDist = 100;
 let shaderR = 1.0;
 let shaderG = 0.3;
 let shaderB = 0.7;
+let baseAlpha = 0.0;
+
+let baseLo = 0.0;//0.3;
+let baseMd = 0.3;
+let baseHi = 0.4;
+
+let backR = 0.05;
+let backG = 0.0;
+let backB = 0.15;
+
+let blendMode = 0;
 
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let analyser = context.createAnalyser();
@@ -20,37 +34,36 @@ var vertexShader = `
 attribute vec4 a_position;
 
 uniform mat4 MVP;
-uniform float drawCol;
 
-varying float fragmentColor;
-varying float zPos;
-varying float yPos;
+uniform vec3 vMainCol;
+uniform vec3 vBackCol;
+
+uniform float brightness;
+uniform float fogDist;
+uniform float cameraY;
+uniform float baseAlpha; // assume 0.0 for additive blend mode, 1.0 for normal blend mode
+
+varying vec4 vertCol;
 
 void main() {
-	// Output position of the vertex, in clip space : MVP * position
 	gl_Position = MVP * a_position;
-	fragmentColor = drawCol;
-    zPos = a_position.y;
-    yPos = a_position.z;
+	
+    float zPosBrightness = brightness + 0.13 * a_position.y;
+    float fogAmt = sqrt(clamp((a_position.z - cameraY) / fogDist, 0.0, 1.0));
+    float alpha = baseAlpha + zPosBrightness * (1.0 - (1.0 - baseAlpha) * fogAmt);
+    
+    fogAmt *= baseAlpha; // don't want background colour mix when additive blending
+    vertCol = vec4((1.0 - fogAmt) * zPosBrightness * vMainCol + fogAmt * vBackCol, alpha);
 }
 `;
 
 var fragmentShader = `
 precision mediump float;
 
-varying float fragmentColor;
-varying float zPos;
-varying float yPos;
-
-uniform float rAmt;
-uniform float gAmt;
-uniform float bAmt;
-uniform float cameraY;
+varying vec4 vertCol;
 
 void main() {
-    float colAmount = fragmentColor + 0.13 * zPos;
-    float alpha = colAmount * pow( 1.0 - 0.0084 * (yPos - cameraY), 2.0);
-	gl_FragColor = vec4(colAmount * rAmt, colAmount * gAmt, colAmount * bAmt, alpha);
+	gl_FragColor = vertCol;
 }
 `;
 
@@ -66,9 +79,9 @@ class PIDController {
     step() {
         this.err = this.target - this.value;
         this.errTotal += this.err;
-        let p = 0.16 * this.err; // 0.16
-        let i = 0.16 * this.errTotal; // 0.12
-        let d = 0.08 * (this.err - this.errLast); // 0.08
+        let p = 0.16 * this.err;
+        let i = 0.16 * this.errTotal;
+        let d = 0.08 * (this.err - this.errLast);
         this.errLast = this.err;
         this.errTotal *= 0.8;
         this.value += p + i + d;
@@ -101,7 +114,7 @@ function main() {
     // get microphone
     navigator.mediaDevices.getUserMedia({audio: true}).then(function(stream) {
         micInput = context.createMediaStreamSource(stream);
-        micInput.connect(analyser);
+        micInput.connect(analyser); // note: need to put this in a button to comply with regulation
     }).catch(function(e) {
         console.error("Error getting microphone", e);
         alert("Couldn't get microphone!");
@@ -146,11 +159,12 @@ function main() {
 
     // uniforms
     let uMVP = gl.getUniformLocation(program, "MVP");
-    let uDrawCol = gl.getUniformLocation(program, "drawCol");
-    let uRAmt = gl.getUniformLocation(program, "rAmt");
-    let uGAmt = gl.getUniformLocation(program, "gAmt");
-    let uBAmt = gl.getUniformLocation(program, "bAmt");
+    let uBrightness = gl.getUniformLocation(program, "brightness");
+    let uMainCol = gl.getUniformLocation(program, "vMainCol");
+    let uBackCol = gl.getUniformLocation(program, "vBackCol");
     let uCameraY = gl.getUniformLocation(program, "cameraY");
+    let uBaseAlpha = gl.getUniformLocation(program, "baseAlpha");
+    let uFogDist = gl.getUniformLocation(program, "fogDist");
 
     // init vertices
     let vertexBuffer = gl.createBuffer();
@@ -161,7 +175,7 @@ function main() {
         let koffset = k * (noiseSize - 1);
         for (let j = 0; j < noiseSize; j++) {
             for (let i = 0; i < noiseSize; i++) {
-                vertexBufferData[index] = i - noiseSize / 2;
+                vertexBufferData[index] = i - noiseSize / 2 + 0.5;
                 index++;
                 vertexBufferData[index] = 0;
                 index++;
@@ -202,9 +216,8 @@ function main() {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
     // camera settings
-    let position = [0, -2, yOffset];
+    let position = [0, -height, yOffset];
     let rotation = [Math.PI, 0, Math.PI];
-    let FoV = 100;
 
     requestAnimationFrame(drawScene);
 
@@ -230,12 +243,21 @@ function main() {
 
         // gl settings
         gl.lineWidth(2.0);
-        gl.clearColor(0.05, 0.0, 0.15, 1.0);
+        gl.clearColor(backR, backG, backB, 1.0);
         gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-        //gl.enable(gl.DEPTH_TEST);
-        //gl.depthFunc(gl.LESS);
-        // gl.enable(gl.CULL_FACE);
+        
+        if (blendMode == 0) {
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // additive blending
+            gl.disable(gl.DEPTH_TEST);
+            baseAlpha = 0.0;
+        } else if (blendMode == 1)
+        {
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // normal blending
+            gl.enable(gl.DEPTH_TEST); // discards fragments that fail depth test
+            gl.depthFunc(gl.LESS);
+            //gl.enable(gl.CULL_FACE); // need to calculate normals for this to work
+            baseAlpha = 1.0;
+        }
         
         // update position
         yOffset += yScrollSpeed * deltaTime;
@@ -273,9 +295,9 @@ function main() {
                 for (let i = 0; i < noiseSize; i++) {
                     let iscale = peaksArray[i];
                     vertexBufferData[ind] = iscale * (
-                        15.0 * pidLo.value * (noise1[i + joffset + koffset] + 0.5) +
-                        5.0 * pidMd.value * noise2[i + joffset + koffset] +
-                        3.0 * pidHi.value * noise3[i + joffset + koffset]
+                        15.0 * (baseLo + pidLo.value) * (noise1[i + joffset + koffset] + 0.5) +
+                        5.0 * (baseMd + pidMd.value) * noise2[i + joffset + koffset] +
+                        3.0 * (baseHi + pidHi.value) * noise3[i + joffset + koffset]
                     );
                     ind += 3;
                 }
@@ -305,11 +327,12 @@ function main() {
         gl.uniformMatrix4fv(uMVP, false, matrix);
 
         // uniforms
-        gl.uniform1f(uDrawCol, shaderBrightness);
-        gl.uniform1f(uRAmt, shaderR);
-        gl.uniform1f(uGAmt, shaderG);
-        gl.uniform1f(uBAmt, shaderB);
+        gl.uniform1f(uBrightness, shaderBrightness);
+        gl.uniform3f(uMainCol, shaderR, shaderG, shaderB);
+        gl.uniform3f(uBackCol, backR, backG, backB);
         gl.uniform1f(uCameraY, yOffset);
+        gl.uniform1f(uBaseAlpha, baseAlpha);
+        gl.uniform1f(uFogDist, fogDist);
 
         // draw
         let primitiveType = gl.TRIANGLES;
@@ -318,7 +341,7 @@ function main() {
         let indexType = gl.UNSIGNED_SHORT;
         gl.drawElements(primitiveType, count, indexType, offset);
 
-        gl.uniform1f(uDrawCol, shaderBrightness + 0.3);
+        gl.uniform1f(uBrightness, shaderBrightness + 0.3);
         primitiveType = gl.LINES; // or LINE_STRIP
         offset = 0;
         count = indices.length;
