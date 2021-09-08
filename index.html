@@ -3,15 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f5b3c9006d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./style.css">
     <title>Cyberspace Visualizer by Gabe Carvalho</title>
 </head>
 <body>
     <canvas id="canvas"></canvas>
     
+    <div class="top-gradient fade-trasition" id="header">
+        <div class="title">
+            <h1>Cyberspace Visualizer</h1>
+            <h2>by gabe carvalho</h2>
+        </div>
+    </div>
+
+    <div class="settings-pane ui-light"></div>
+    <div class="settings-pane scanlines"></div>
+
+    <div class="futu-text futu-1">cyberspace</div>
+    <div class="futu-text futu-2">visualizer</div>
+    
+    <button id="settings-btn">
+        <i class="fas fa-sliders-h fade-trasition" id="settings-icon"></i>
+    </button>
+
+    <div class="settings-pane">
+        <div class="options">
+            <div class="settings-title">Settings</div>
+            <div class="scrollpane-start"></div>
+            <div class="settings-scrollpane">
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="1.0" class="slider" id="meshR"/>
+                    <label for="meshR">Mesh R</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.3" class="slider" id="meshG"/>
+                    <label for="meshG">Mesh G</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.7" class="slider" id="meshB"/>
+                    <label for="meshB">Mesh B</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.2" class="slider" id="brightness"/>
+                    <label for="brightness">Brightness</label>
+                </div>
+                
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.05" class="slider" id="backR"/>
+                    <label for="backR">Background R</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.0" class="slider" id="backG"/>
+                    <label for="backG">Background G</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.15" class="slider" id="backB"/>
+                    <label for="backB">Background B</label>
+                </div>
+                
+                <div class="option">
+                    <input type="checkbox" checked class="toggle" id="blendmode"/>
+                    <label for="blendmode">Blend Mode</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" checked class="toggle" id="drawTriangles"/>
+                    <label for="drawTriangles">Draw Triangles</label>
+                </div>
+                <div class="option">
+                    <input type="checkbox" checked class="toggle" id="drawLines"/>
+                    <label for="drawLines">Draw Lines</label>
+                </div>
+                
+                <div class="option">
+                    <input type="range" min="0.0" max="30.0" step="0.5" value="4.0" class="slider" id="speed"/>
+                    <label for="speed">Speed</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="20" max="120" step="1" value="100" class="slider" id="FoV"/>
+                    <label for="FoV">FoV</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="4.0" step="0.1" value="2" class="slider" id="height"/>
+                    <label for="height">Height</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="10" max="120" step="1" value="100" class="slider" id="fogDist"/>
+                    <label for="fogDist">Draw Distance</label>
+                </div>
+
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.0" class="slider" id="baseLo"/>
+                    <label for="baseLo">Base Low Signal</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.3" class="slider" id="baseMd"/>
+                    <label for="baseMd">Base Mid Signal</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="1.0" step="0.01" value="0.4" class="slider" id="baseHi"/>
+                    <label for="baseHi">Base High Signal</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="2.0" step="0.01" value="1.0" class="slider" id="sensitivityLo"/>
+                    <label for="sensitivityLo">Sensitivity Low</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="2.0" step="0.01" value="1.0" class="slider" id="sensitivityMd"/>
+                    <label for="sensitivityMd">Sensitivity Mid</label>
+                </div>
+                <div class="option">
+                    <input type="range" min="0.0" max="2.0" step="0.01" value="1.0" class="slider" id="sensitivityHi"/>
+                    <label for="sensitivityHi">Sensitivity High</label>
+                </div>
+            </div>
+            <div class="scrollpane-end"></div>
+        </div>
+    </div>
+
     <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
     <script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
     <script src="./perlin.js"></script>
+    <script src="./controls.js"></script>
     <script src="./app.js"></script>
 </body>
 </html>

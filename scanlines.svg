@@ -1,0 +1,9 @@
+<svg width="728" height="1080" viewBox="0 0 728 1080" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path id="scanlines" d="M-37 -62C-55.5015 -62 -70.5 -47.0016 -70.5 -28.5V1085C-70.5 1103.5 -55.5015 1118.5 -37 1118.5H661C679.502 1118.5 694.5 1103.5 694.5 1085V711.859C694.5 705.737 696.343 699.755 699.789 694.694L720.691 663.994C724.476 658.435 726.5 651.866 726.5 645.141V548.523C726.5 542.018 724.606 535.653 721.049 530.206L699.463 497.154C696.225 492.194 694.5 486.399 694.5 480.477V136.708C694.5 130.973 696.117 125.355 699.165 120.497L721.377 85.097C724.724 79.7617 726.5 73.5906 726.5 67.292V-28.5C726.5 -47.0015 711.502 -62 693 -62H-37Z" fill="url(#pattern0)" stroke="#FFEAFF" stroke-width="3"/>
+<defs>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="0.0403023" height="0.0254777">
+<use xlink:href="#image0" transform="scale(0.00125945 0.000849257)"/>
+</pattern>
+<image id="image0" data-name="scanlines_small.png" width="32" height="30" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAYAAABNChwpAAAAkklEQVR4nGNhYGDYCcTaQHx1IGgWIJEHxHFAvAgPnQjE82khDnLAeyB+CsTvoDQ6n6biIAcMKAA5QBKIlQnQSrQSBzlgDhCrArEdAdqGFuIgB/wYSAxyQAoDJFUuBOJ4BkSqhfFBNCj1LqCFOHIuwEc/o5X4aC4YzQWjuWA0F4zmgtFcMJoLRnPBaC4YzQUDngsA/VKg0CjWI5EAAAAASUVORK5CYII="/>
+</defs>
+</svg>

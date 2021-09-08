@@ -4,25 +4,6 @@ const noiseSize = 24;
 const chunks = 8;
 const wavelength = 8;
 const octaves = 3;
-let FoV = 100;
-let height = 2;
-let yScrollSpeed = 4; // 18
-let shaderBrightness = 0.2;
-let fogDist = 100;
-let shaderR = 1.0;
-let shaderG = 0.3;
-let shaderB = 0.7;
-let baseAlpha = 0.0;
-
-let baseLo = 0.0;//0.3;
-let baseMd = 0.3;
-let baseHi = 0.4;
-
-let backR = 0.05;
-let backG = 0.0;
-let backB = 0.15;
-
-let blendMode = 0;
 
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let analyser = context.createAnalyser();
@@ -215,10 +196,6 @@ function main() {
     }
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-    // camera settings
-    let position = [0, -height, yOffset];
-    let rotation = [Math.PI, 0, Math.PI];
-
     requestAnimationFrame(drawScene);
 
     let then = 0;
@@ -226,6 +203,10 @@ function main() {
         now *= 0.001;
         let deltaTime = now - then;
         then = now;
+
+        // camera settings
+        let position = [0, -height, yOffset];
+        let rotation = [Math.PI, 0, Math.PI];
 
         // update audio levels
         if (micInput != null) {
@@ -295,9 +276,9 @@ function main() {
                 for (let i = 0; i < noiseSize; i++) {
                     let iscale = peaksArray[i];
                     vertexBufferData[ind] = iscale * (
-                        15.0 * (baseLo + pidLo.value) * (noise1[i + joffset + koffset] + 0.5) +
-                        5.0 * (baseMd + pidMd.value) * noise2[i + joffset + koffset] +
-                        3.0 * (baseHi + pidHi.value) * noise3[i + joffset + koffset]
+                        15.0 * (baseLo + pidLo.value * sensitivityLo) * (noise1[i + joffset + koffset] + 0.5) +
+                        5.0 * (baseMd + pidMd.value * sensitivityMd) * noise2[i + joffset + koffset] +
+                        3.0 * (baseHi + pidHi.value * sensitivityHi) * noise3[i + joffset + koffset]
                     );
                     ind += 3;
                 }
@@ -335,18 +316,22 @@ function main() {
         gl.uniform1f(uFogDist, fogDist);
 
         // draw
-        let primitiveType = gl.TRIANGLES;
-        offset = 0;
-        let count = indices.length;
-        let indexType = gl.UNSIGNED_SHORT;
-        gl.drawElements(primitiveType, count, indexType, offset);
-
-        gl.uniform1f(uBrightness, shaderBrightness + 0.3);
-        primitiveType = gl.LINES; // or LINE_STRIP
-        offset = 0;
-        count = indices.length;
-        indexType = gl.UNSIGNED_SHORT;
-        gl.drawElements(primitiveType, count, indexType, offset);
+        if (drawTriangles) {
+            let primitiveType = gl.TRIANGLES;
+            offset = 0;
+            let count = indices.length;
+            let indexType = gl.UNSIGNED_SHORT;
+            gl.drawElements(primitiveType, count, indexType, offset);
+        }
+        
+        if (drawLines) {
+            gl.uniform1f(uBrightness, Math.min(shaderBrightness + 0.3, 1.0));
+            let primitiveType = gl.LINES; // LINES or LINE_STRIP
+            offset = 0;
+            let count = indices.length;
+            let indexType = gl.UNSIGNED_SHORT;
+            gl.drawElements(primitiveType, count, indexType, offset);
+        }
 
         requestAnimationFrame(drawScene);
     }

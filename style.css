@@ -1,9 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap');
+
+@font-face {
+    font-family: 'pectopah';
+    src: url('fonts/Pectopah.woff2') format('woff2'),
+        url('fonts/Pectopah.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fantasma';
+    src: url('fonts/Fantasma-Regular.woff2') format('woff2'),
+        url('fonts/Fantasma-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FUTU';
+    src: url('fonts/FUTU.woff2') format('woff2'),
+        url('fonts/FUTU.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --title-color: #FFEAFF;
+    --settings-pane-width: 700px;
+    --settings-pane-left: -700px;
+}
+
+.show-settings {
+    --settings-pane-left: -700px;
+}
+
 body {
     margin: 0;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    font-weight: 400;
+    font-size: 1.5em;
 }
 
 canvas {
+    display: block;
+    position: fixed;
     width: 100vw;
     height: 100vh;
+    z-index: -5;
+}
+
+.top-gradient {
     display: block;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 35vh;
+    min-height: 200px;
+    z-index: -4;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    
+}
+
+.title {
+    display:block;
+    position:fixed;
+    top: 24px;
+    right: 24px;
+    text-align: right;
+}
+
+h1 {
+    font-family: 'pectopah', sans-serif;
+    font-size: 72px;
+    letter-spacing: -1px;
+    margin: 0;
+    color: var(--title-color);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.65);
+}
+
+h2 {
+    font-family: 'Fantasma', sans-serif;
+    font-size: 40px;
+    margin: -20px 6px 0 0;
+    color: white;
+}
+
+.fade-trasition {
+    transition: opacity 0.5s ease-out;
+}
+
+.inactive {
+    opacity: 0;
+}
+
+#settings-btn {
+    position: fixed;
+    margin: 30px;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+    border-style: none;
+    cursor: pointer;
+}
+
+.settings-btn:hover {
+    cursor: pointer;
+}
+
+.no-click {
+    pointer-events: none;
+}
+
+.can-click {
+    pointer-events: auto;
+}
+
+#settings-icon {
+    font-size: 56px;
+    color: var(--title-color);
+}
+
+.settings-pane {
+    position: fixed;
+    top: 0px;
+    left: var(--settings-pane-left);
+    height: 100vh;
+    max-height: 100vh;
+    width: var(--settings-pane-width);
+    background-size: var(--settings-pane-width) 100vh;
+    z-index: 0;
+}
+
+.scanlines {
+    background-image: url(scanlines.svg);
+    background-position: top right;
+    opacity: 1.0;
+    z-index: -3;
+}
+
+.ui-light {
+    background-image: url(gradient.svg);
+    background-position: top right;
+    mix-blend-mode: hard-light;
+    isolation: isolate;
+    z-index: -2;
+    left: calc(var(--settings-pane-left) - 3px);
+}
+
+.futu-text {
+    position: fixed;
+    font-family: 'FUTU', sans-serif;
+    font-size: 400px;
+    text-align: center;
+    top: 50%;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    transform-origin: center left;
+    transform: rotate(-90deg);
+    z-index: -1;
+    filter: blur(4px);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+.futu-1 {
+    top: 800px;
+    left: calc(190px + var(--settings-pane-left));
+}
+
+.futu-2 {
+    top: 1000px;
+    left: calc(490px + var(--settings-pane-left));
+}
+
+.options {
+    height: auto;
+    max-height: 100%;
+    margin: 0 60px 0 18px;
+    display: flex;
+    flex-direction: column;
+    z-index: -1;
+}
+
+.settings-title {
+    font-family: 'Fantasma', sans-serif;
+    font-size: 70px;
+    margin: 18px 0 30px 100px;
+    color: white;
+}
+
+.scrollpane-start {
+    width: 100%;
+    height: 3px;
+    min-height: 3px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.scrollpane-end {
+    width: 100%;
+    height: 3px;
+    min-height: 3px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 18px;
+}
+
+.settings-scrollpane {
+    height: 100%;
+    overflow-y: scroll;
+    direction: rtl;
+    scrollbar-width: normal;
+    scrollbar-color: rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.8);
+    padding: 24px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+  
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.option {
+    direction: ltr;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+      overflow: hidden;
+      width: 300px;
+      -webkit-appearance: none;
+      background-color: #9a905d;
+    }
+    
+    input[type='range']::-webkit-slider-runnable-track {
+      height: 10px;
+      -webkit-appearance: none;
+      color: #13bba4;
+      margin-top: -1px;
+    }
+    
+    input[type='range']::-webkit-slider-thumb {
+      width: 10px;
+      -webkit-appearance: none;
+      height: 10px;
+      cursor: grab;
+      background: #434343;
+      box-shadow: -80px 0 0 80px #43e5f7;
+    }
+
+}
+
+input[type="range"]::-moz-range-track {
+    background-color:rgba(0, 0, 0, 1);
+    height: 20px
+}
+
+input[type="range"]::-moz-range-progress {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(128, 128, 128, 1.0));
+    height: 20px
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 3px;
+    height: 20px;
+    border-style: none;
+    background-color:rgba(255, 255, 255, 1.0);
 }
