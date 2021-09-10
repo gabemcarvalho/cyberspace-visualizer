@@ -3,8 +3,8 @@
 
 @font-face {
     font-family: 'pectopah';
-    src: url('/fonts/Pectopah.woff2') format('woff2'),
-        url('/fonts/Pectopah.woff') format('woff');
+    src: url('Pectopah.woff2') format('woff2'),
+        url('Pectopah.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -12,8 +12,8 @@
 
 @font-face {
     font-family: 'Fantasma';
-    src: url('/fonts/Fantasma-Regular.woff2') format('woff2'),
-        url('/fonts/Fantasma-Regular.woff') format('woff');
+    src: url('Fantasma-Regular.woff2') format('woff2'),
+        url('Fantasma-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -21,8 +21,8 @@
 
 @font-face {
     font-family: 'FUTU';
-    src: url('/fonts/FUTU.woff2') format('woff2'),
-        url('/fonts/FUTU.woff') format('woff');
+    src: url('FUTU.woff2') format('woff2'),
+        url('FUTU.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
