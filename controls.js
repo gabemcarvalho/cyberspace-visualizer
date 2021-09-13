@@ -39,6 +39,16 @@ document.getElementById("settings-btn").addEventListener('click', e => {
     }
 });
 
+function RedSlider() {
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, red '+ percent +'%, #000 ' + percent + '%, #000 100%)';
+
+    this.oninput = function() {
+        let percent = this.value / this.max * 100;
+        this.style.background = 'linear-gradient(to right, #000 0%, red '+ percent +'%, #000 ' + percent + '%, #000 100%)'
+    };
+};
+
 // Global variables
 var FoV = 100;
 var height = 2;
@@ -65,29 +75,53 @@ let baseAlpha = 0.0;
 var drawTriangles = true;
 var drawLines = true;
 
-document.getElementById("meshR").oninput = function() {
+let e = document.getElementById("meshR");
+e.oninput = function() {
     shaderR = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #f00 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("meshG").oninput = function() {
+e = document.getElementById("meshG");
+e.oninput = function() {
     shaderG = parseFloat(this.value);
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #0f0 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("meshB").oninput = function() {
+e = document.getElementById("meshB");
+e.oninput = function() {
     shaderB = parseFloat(this.value);
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #00f '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("backR").oninput = function() {
+e = document.getElementById("backR");
+e.oninput = function() {
     backR = parseFloat(this.value);
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #f00 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("backG").oninput = function() {
+e = document.getElementById("backG");
+e.oninput = function() {
     backG = parseFloat(this.value);
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #0f0 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("backB").oninput = function() {
+e = document.getElementById("backB");
+e.oninput = function() {
     backB = parseFloat(this.value);
+    let percent = this.value / this.max * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #00f '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
 document.getElementById("blendmode").addEventListener('click', function(e) {
     if (this.checked) {
@@ -105,46 +139,90 @@ document.getElementById("drawLines").addEventListener('click', function(e) {
     drawLines = this.checked;
 });
 
-document.getElementById("brightness").oninput = function() {
+e = document.getElementById("brightness");
+e.oninput = function() {
     shaderBrightness = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("speed").oninput = function() {
+e = document.getElementById("speed");
+e.oninput = function() {
     yScrollSpeed = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("FoV").oninput = function() {
+e = document.getElementById("FoV");
+e.oninput = function() {
     FoV = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("height").oninput = function() {
+e = document.getElementById("height");
+e.oninput = function() {
     height = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("fogDist").oninput = function() {
+e = document.getElementById("fogDist");
+e.oninput = function() {
     fogDist = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("baseLo").oninput = function() {
+e = document.getElementById("baseLo");
+e.oninput = function() {
     baseLo = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("baseMd").oninput = function() {
+e = document.getElementById("baseMd");
+e.oninput = function() {
     baseMd = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("baseHi").oninput = function() {
+e = document.getElementById("baseHi");
+e.oninput = function() {
     baseHi = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("sensitivityLo").oninput = function() {
+e = document.getElementById("sensitivityLo");
+e.oninput = function() {
     sensitivityLo = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("sensitivityMd").oninput = function() {
+e = document.getElementById("sensitivityMd");
+e.oninput = function() {
     sensitivityMd = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
 
-document.getElementById("sensitivityHi").oninput = function() {
+e = document.getElementById("sensitivityHi");
+e.oninput = function() {
     sensitivityHi = parseFloat(this.value);
+    let percent = (this.value - this.min) / (this.max - this.min) * 100;
+    this.style.background = 'linear-gradient(to right, #000 0%, #d3d3d3 '+ percent +'%, #000 ' + percent + '%, #000 100%)';
 };
+e.oninput();
